@@ -1,0 +1,7 @@
+data.csv
+data_copy.csv
+node_modules/
+.vscode/
+myenv
+webctrl.csv
+Diagram.html

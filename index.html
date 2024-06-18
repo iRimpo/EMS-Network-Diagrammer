@@ -1,0 +1,758 @@
+! for demo purposes
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: auto;
+                 height: 1000px;
+                 background-color: white;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: auto;
+                 height: 1000px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="VendorA">VendorA</option>
+                                
+                                    <option value="VendorB">VendorB</option>
+                                
+                                    <option value="VendorC">VendorC</option>
+                                
+                                    <option value="Vendor Name">Vendor Name</option>
+                                
+                                    <option value="Building1">Building1</option>
+                                
+                                    <option value="ABC123 (2.4.5)">ABC123 (2.4.5)</option>
+                                
+                                    <option value="MNO345 (2.4.5)">MNO345 (2.4.5)</option>
+                                
+                                    <option value="YZA567 (2.4.5)">YZA567 (2.4.5)</option>
+                                
+                                    <option value="KLM789 (2.4.5)">KLM789 (2.4.5)</option>
+                                
+                                    <option value="WXY901 (2.4.5)">WXY901 (2.4.5)</option>
+                                
+                                    <option value="IJK123 (2.4.5)">IJK123 (2.4.5)</option>
+                                
+                                    <option value="VWX345 (2.4.5)">VWX345 (2.4.5)</option>
+                                
+                                    <option value="HIJ567 (2.4.5)">HIJ567 (2.4.5)</option>
+                                
+                                    <option value="TUV789 (2.4.5)">TUV789 (2.4.5)</option>
+                                
+                                    <option value="FGH901 (2.4.5)">FGH901 (2.4.5)</option>
+                                
+                                    <option value="STU123 (2.4.5)">STU123 (2.4.5)</option>
+                                
+                                    <option value="EFG345 (2.4.5)">EFG345 (2.4.5)</option>
+                                
+                                    <option value="QRS567 (2.4.5)">QRS567 (2.4.5)</option>
+                                
+                                    <option value="Building2">Building2</option>
+                                
+                                    <option value="DEF456 (2.4.5)">DEF456 (2.4.5)</option>
+                                
+                                    <option value="PQR678 (2.4.5)">PQR678 (2.4.5)</option>
+                                
+                                    <option value="BCD890 (2.4.5)">BCD890 (2.4.5)</option>
+                                
+                                    <option value="NOP012 (2.4.5)">NOP012 (2.4.5)</option>
+                                
+                                    <option value="ZAB234 (2.4.5)">ZAB234 (2.4.5)</option>
+                                
+                                    <option value="LMN456 (2.4.5)">LMN456 (2.4.5)</option>
+                                
+                                    <option value="YZA678 (2.4.5)">YZA678 (2.4.5)</option>
+                                
+                                    <option value="KLM890 (2.4.5)">KLM890 (2.4.5)</option>
+                                
+                                    <option value="WXY012 (2.4.5)">WXY012 (2.4.5)</option>
+                                
+                                    <option value="IJK234 (2.4.5)">IJK234 (2.4.5)</option>
+                                
+                                    <option value="VWX456 (2.4.5)">VWX456 (2.4.5)</option>
+                                
+                                    <option value="HIJ678 (2.4.5)">HIJ678 (2.4.5)</option>
+                                
+                                    <option value="TUV890 (2.4.5)">TUV890 (2.4.5)</option>
+                                
+                                    <option value="Building3">Building3</option>
+                                
+                                    <option value="GHI789 (2.4.6)">GHI789 (2.4.6)</option>
+                                
+                                    <option value="STU901 (2.4.5)">STU901 (2.4.5)</option>
+                                
+                                    <option value="EFG123 (2.4.6)">EFG123 (2.4.6)</option>
+                                
+                                    <option value="QRS345 (2.4.5)">QRS345 (2.4.5)</option>
+                                
+                                    <option value="CDE567 (2.4.6)">CDE567 (2.4.6)</option>
+                                
+                                    <option value="PQR789 (2.4.5)">PQR789 (2.4.5)</option>
+                                
+                                    <option value="BCD901 (2.4.6)">BCD901 (2.4.6)</option>
+                                
+                                    <option value="NOP123 (2.4.5)">NOP123 (2.4.5)</option>
+                                
+                                    <option value="ZAB345 (2.4.6)">ZAB345 (2.4.6)</option>
+                                
+                                    <option value="LMN567 (2.4.5)">LMN567 (2.4.5)</option>
+                                
+                                    <option value="YZA789 (2.4.6)">YZA789 (2.4.6)</option>
+                                
+                                    <option value="KLM901 (2.4.5)">KLM901 (2.4.5)</option>
+                                
+                                    <option value="Building4">Building4</option>
+                                
+                                    <option value="JKL012 (2.4.5)">JKL012 (2.4.5)</option>
+                                
+                                    <option value="VWX234 (2.4.5)">VWX234 (2.4.5)</option>
+                                
+                                    <option value="HIJ456 (2.4.5)">HIJ456 (2.4.5)</option>
+                                
+                                    <option value="TUV678 (2.4.5)">TUV678 (2.4.5)</option>
+                                
+                                    <option value="FGH890 (2.4.5)">FGH890 (2.4.5)</option>
+                                
+                                    <option value="STU012 (2.4.5)">STU012 (2.4.5)</option>
+                                
+                                    <option value="EFG234 (2.4.5)">EFG234 (2.4.5)</option>
+                                
+                                    <option value="QRS456 (2.4.5)">QRS456 (2.4.5)</option>
+                                
+                                    <option value="CDE678 (2.4.5)">CDE678 (2.4.5)</option>
+                                
+                                    <option value="PQR890 (2.4.5)">PQR890 (2.4.5)</option>
+                                
+                                    <option value="BCD012 (2.4.5)">BCD012 (2.4.5)</option>
+                                
+                                    <option value="NOP234 (2.4.5)">NOP234 (2.4.5)</option>
+                                
+                                    <option value="Building">Building</option>
+                                
+                                    <option value="Serial Number (Driver Version)">Serial Number (Driver Version)</option>
+                                
+                                    <option value="BuildingX">BuildingX</option>
+                                
+                                    <option value="ABC123 (3.5.7)">ABC123 (3.5.7)</option>
+                                
+                                    <option value="JKL012 (3.5.2)">JKL012 (3.5.2)</option>
+                                
+                                    <option value="STU901 (2.5.4)">STU901 (2.5.4)</option>
+                                
+                                    <option value="BCD890 (3.5.7)">BCD890 (3.5.7)</option>
+                                
+                                    <option value="KLM789 (2.5.6)">KLM789 (2.5.6)</option>
+                                
+                                    <option value="TUV678 (3.4.7)">TUV678 (3.4.7)</option>
+                                
+                                    <option value="CDE567 (2.4.3)">CDE567 (2.4.3)</option>
+                                
+                                    <option value="LMN456 (3.5.4)">LMN456 (3.5.4)</option>
+                                
+                                    <option value="VWX345 (2.5.3)">VWX345 (2.5.3)</option>
+                                
+                                    <option value="EFG234 (3.4.6)">EFG234 (3.4.6)</option>
+                                
+                                    <option value="NOP123 (2.4.3)">NOP123 (2.4.3)</option>
+                                
+                                    <option value="WXY012 (3.4.6)">WXY012 (3.4.6)</option>
+                                
+                                    <option value="FGH901 (2.6.4)">FGH901 (2.6.4)</option>
+                                
+                                    <option value="PQR890 (3.6.3)">PQR890 (3.6.3)</option>
+                                
+                                    <option value="YZA789 (2.3.6)">YZA789 (2.3.6)</option>
+                                
+                                    <option value="HIJ678 (3.5.5)">HIJ678 (3.5.5)</option>
+                                
+                                    <option value="QRS567 (2.5.6)">QRS567 (2.5.6)</option>
+                                
+                                    <option value="DEF456 (3.5.6)">DEF456 (3.5.6)</option>
+                                
+                                    <option value="MNO345 (2.5.3)">MNO345 (2.5.3)</option>
+                                
+                                    <option value="VWX234 (3.5.6)">VWX234 (3.5.6)</option>
+                                
+                                    <option value="NOP012 (3.4.5)">NOP012 (3.4.5)</option>
+                                
+                                    <option value="WXY901 (2.3.5)">WXY901 (2.3.5)</option>
+                                
+                                    <option value="FGH890 (3.5.7)">FGH890 (3.5.7)</option>
+                                
+                                    <option value="PQR789 (2.6.4)">PQR789 (2.6.4)</option>
+                                
+                                    <option value="YZA678 (3.6.7)">YZA678 (3.6.7)</option>
+                                
+                                    <option value="HIJ567 (2.6.3)">HIJ567 (2.6.3)</option>
+                                
+                                    <option value="PQR456 (3.6.4)">PQR456 (3.6.4)</option>
+                                
+                                    <option value="YZA345 (2.6.4)">YZA345 (2.6.4)</option>
+                                
+                                    <option value="BuildingY">BuildingY</option>
+                                
+                                    <option value="DEF456 (2.6.4)">DEF456 (2.6.4)</option>
+                                
+                                    <option value="MNO345 (2.4.3)">MNO345 (2.4.3)</option>
+                                
+                                    <option value="VWX234 (3.4.6)">VWX234 (3.4.6)</option>
+                                
+                                    <option value="EFG123 (2.4.5)">EFG123 (2.4.5)</option>
+                                
+                                    <option value="NOP012 (3.5.3)">NOP012 (3.5.3)</option>
+                                
+                                    <option value="WXY901 (2.6.5)">WXY901 (2.6.5)</option>
+                                
+                                    <option value="FGH890 (3.6.5)">FGH890 (3.6.5)</option>
+                                
+                                    <option value="PQR789 (2.4.6)">PQR789 (2.4.6)</option>
+                                
+                                    <option value="YZA678 (3.5.7)">YZA678 (3.5.7)</option>
+                                
+                                    <option value="HIJ567 (2.6.4)">HIJ567 (2.6.4)</option>
+                                
+                                    <option value="QRS456 (3.6.7)">QRS456 (3.6.7)</option>
+                                
+                                    <option value="ZAB345 (2.3.5)">ZAB345 (2.3.5)</option>
+                                
+                                    <option value="IJK234 (3.4.5)">IJK234 (3.4.5)</option>
+                                
+                                    <option value="BCD012 (3.6.4)">BCD012 (3.6.4)</option>
+                                
+                                    <option value="TUV890 (3.6.3)">TUV890 (3.6.3)</option>
+                                
+                                    <option value="PQR678 (3.4.7)">PQR678 (3.4.7)</option>
+                                
+                                    <option value="YZA567 (2.6.4)">YZA567 (2.6.4)</option>
+                                
+                                    <option value="HIJ456 (3.5.7)">HIJ456 (3.5.7)</option>
+                                
+                                    <option value="QRS345 (2.6.3)">QRS345 (2.6.3)</option>
+                                
+                                    <option value="ZAB234 (3.6.4)">ZAB234 (3.6.4)</option>
+                                
+                                    <option value="IJK123 (2.5.3)">IJK123 (2.5.3)</option>
+                                
+                                    <option value="STU012 (3.5.5)">STU012 (3.5.5)</option>
+                                
+                                    <option value="BCD901 (2.5.6)">BCD901 (2.5.6)</option>
+                                
+                                    <option value="KLM901 (3.5.7)">KLM901 (3.5.7)</option>
+                                
+                                    <option value="STU789 (2.5.3)">STU789 (2.5.3)</option>
+                                
+                                    <option value="BCD678 (3.5.6)">BCD678 (3.5.6)</option>
+                                
+                                    <option value="BuildingZ">BuildingZ</option>
+                                
+                                    <option value="GHI789 (2.3.6)">GHI789 (2.3.6)</option>
+                                
+                                    <option value="PQR678 (3.6.5)">PQR678 (3.6.5)</option>
+                                
+                                    <option value="YZA567 (2.6.3)">YZA567 (2.6.3)</option>
+                                
+                                    <option value="HIJ456 (3.6.4)">HIJ456 (3.6.4)</option>
+                                
+                                    <option value="QRS345 (2.3.6)">QRS345 (2.3.6)</option>
+                                
+                                    <option value="ZAB234 (3.5.2)">ZAB234 (3.5.2)</option>
+                                
+                                    <option value="IJK123 (2.3.4)">IJK123 (2.3.4)</option>
+                                
+                                    <option value="STU012 (3.6.4)">STU012 (3.6.4)</option>
+                                
+                                    <option value="BCD901 (2.3.6)">BCD901 (2.3.6)</option>
+                                
+                                    <option value="KLM890 (3.5.5)">KLM890 (3.5.5)</option>
+                                
+                                    <option value="TUV789 (2.5.4)">TUV789 (2.5.4)</option>
+                                
+                                    <option value="CDE678 (3.5.7)">CDE678 (3.5.7)</option>
+                                
+                                    <option value="LMN567 (2.5.6)">LMN567 (2.5.6)</option>
+                                
+                                    <option value="VWX456 (3.5.2)">VWX456 (3.5.2)</option>
+                                
+                                    <option value="EFG345 (2.6.3)">EFG345 (2.6.3)</option>
+                                
+                                    <option value="NOP234 (3.4.7)">NOP234 (3.4.7)</option>
+                                
+                                    <option value="ABC123 (2.3.4)">ABC123 (2.3.4)</option>
+                                
+                                    <option value="JKL012 (3.6.4)">JKL012 (3.6.4)</option>
+                                
+                                    <option value="STU901 (2.3.5)">STU901 (2.3.5)</option>
+                                
+                                    <option value="BCD890 (3.6.3)">BCD890 (3.6.3)</option>
+                                
+                                    <option value="KLM789 (2.3.6)">KLM789 (2.3.6)</option>
+                                
+                                    <option value="TUV678 (3.5.6)">TUV678 (3.5.6)</option>
+                                
+                                    <option value="LMN456 (3.4.6)">LMN456 (3.4.6)</option>
+                                
+                                    <option value="VWX345 (2.3.4)">VWX345 (2.3.4)</option>
+                                
+                                    <option value="EFG234 (3.4.5)">EFG234 (3.4.5)</option>
+                                
+                                    <option value="VWX012 (3.4.7)">VWX012 (3.4.7)</option>
+                                
+                                    <option value="EFG901 (2.3.5)">EFG901 (2.3.5)</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "blue", "font": {"color": "black"}, "id": "VendorA", "label": "VendorA", "shape": "dot"}, {"color": "blue", "font": {"color": "black"}, "id": "VendorB", "label": "VendorB", "shape": "dot"}, {"color": "blue", "font": {"color": "black"}, "id": "VendorC", "label": "VendorC", "shape": "dot"}, {"color": "blue", "font": {"color": "black"}, "id": "Vendor Name", "label": "Vendor Name", "shape": "dot"}, {"color": "green", "font": {"color": "black"}, "id": "Building1", "label": "Building1", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "ABC123 (2.4.5)", "label": "ABC123 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "MNO345 (2.4.5)", "label": "MNO345 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "YZA567 (2.4.5)", "label": "YZA567 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "KLM789 (2.4.5)", "label": "KLM789 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "WXY901 (2.4.5)", "label": "WXY901 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "IJK123 (2.4.5)", "label": "IJK123 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "VWX345 (2.4.5)", "label": "VWX345 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ567 (2.4.5)", "label": "HIJ567 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "TUV789 (2.4.5)", "label": "TUV789 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "FGH901 (2.4.5)", "label": "FGH901 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "STU123 (2.4.5)", "label": "STU123 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "EFG345 (2.4.5)", "label": "EFG345 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building1"}, {"color": "red", "font": {"color": "black"}, "id": "QRS567 (2.4.5)", "label": "QRS567 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building1"}, {"color": "green", "font": {"color": "black"}, "id": "Building2", "label": "Building2", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "DEF456 (2.4.5)", "label": "DEF456 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "PQR678 (2.4.5)", "label": "PQR678 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "BCD890 (2.4.5)", "label": "BCD890 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "NOP012 (2.4.5)", "label": "NOP012 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "ZAB234 (2.4.5)", "label": "ZAB234 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "LMN456 (2.4.5)", "label": "LMN456 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "YZA678 (2.4.5)", "label": "YZA678 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "KLM890 (2.4.5)", "label": "KLM890 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "WXY012 (2.4.5)", "label": "WXY012 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "IJK234 (2.4.5)", "label": "IJK234 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "VWX456 (2.4.5)", "label": "VWX456 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ678 (2.4.5)", "label": "HIJ678 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building2"}, {"color": "red", "font": {"color": "black"}, "id": "TUV890 (2.4.5)", "label": "TUV890 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building2"}, {"color": "green", "font": {"color": "black"}, "id": "Building3", "label": "Building3", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "GHI789 (2.4.6)", "label": "GHI789 (2.4.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "STU901 (2.4.5)", "label": "STU901 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "EFG123 (2.4.6)", "label": "EFG123 (2.4.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "QRS345 (2.4.5)", "label": "QRS345 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "CDE567 (2.4.6)", "label": "CDE567 (2.4.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "PQR789 (2.4.5)", "label": "PQR789 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "BCD901 (2.4.6)", "label": "BCD901 (2.4.6)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "NOP123 (2.4.5)", "label": "NOP123 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "ZAB345 (2.4.6)", "label": "ZAB345 (2.4.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "LMN567 (2.4.5)", "label": "LMN567 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "YZA789 (2.4.6)", "label": "YZA789 (2.4.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building3"}, {"color": "red", "font": {"color": "black"}, "id": "KLM901 (2.4.5)", "label": "KLM901 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building3"}, {"color": "green", "font": {"color": "black"}, "id": "Building4", "label": "Building4", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "JKL012 (2.4.5)", "label": "JKL012 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "VWX234 (2.4.5)", "label": "VWX234 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ456 (2.4.5)", "label": "HIJ456 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "TUV678 (2.4.5)", "label": "TUV678 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "FGH890 (2.4.5)", "label": "FGH890 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "STU012 (2.4.5)", "label": "STU012 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "EFG234 (2.4.5)", "label": "EFG234 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "QRS456 (2.4.5)", "label": "QRS456 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "CDE678 (2.4.5)", "label": "CDE678 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "PQR890 (2.4.5)", "label": "PQR890 (2.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "BCD012 (2.4.5)", "label": "BCD012 (2.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: Building4"}, {"color": "red", "font": {"color": "black"}, "id": "NOP234 (2.4.5)", "label": "NOP234 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: Building4"}, {"color": "green", "font": {"color": "black"}, "id": "Building", "label": "Building", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "Serial Number (Driver Version)", "label": "Serial Number (Driver Version)", "shape": "dot", "title": "Vendor: Vendor Name\nBuilding: Building"}, {"color": "green", "font": {"color": "black"}, "id": "BuildingX", "label": "BuildingX", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "ABC123 (3.5.7)", "label": "ABC123 (3.5.7)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "JKL012 (3.5.2)", "label": "JKL012 (3.5.2)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "STU901 (2.5.4)", "label": "STU901 (2.5.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "BCD890 (3.5.7)", "label": "BCD890 (3.5.7)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "KLM789 (2.5.6)", "label": "KLM789 (2.5.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "TUV678 (3.4.7)", "label": "TUV678 (3.4.7)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "CDE567 (2.4.3)", "label": "CDE567 (2.4.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "LMN456 (3.5.4)", "label": "LMN456 (3.5.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "VWX345 (2.5.3)", "label": "VWX345 (2.5.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "EFG234 (3.4.6)", "label": "EFG234 (3.4.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "NOP123 (2.4.3)", "label": "NOP123 (2.4.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "WXY012 (3.4.6)", "label": "WXY012 (3.4.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "FGH901 (2.6.4)", "label": "FGH901 (2.6.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "PQR890 (3.6.3)", "label": "PQR890 (3.6.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "YZA789 (2.3.6)", "label": "YZA789 (2.3.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ678 (3.5.5)", "label": "HIJ678 (3.5.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "QRS567 (2.5.6)", "label": "QRS567 (2.5.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "DEF456 (3.5.6)", "label": "DEF456 (3.5.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "MNO345 (2.5.3)", "label": "MNO345 (2.5.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "VWX234 (3.5.6)", "label": "VWX234 (3.5.6)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "NOP012 (3.4.5)", "label": "NOP012 (3.4.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "WXY901 (2.3.5)", "label": "WXY901 (2.3.5)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "FGH890 (3.5.7)", "label": "FGH890 (3.5.7)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "PQR789 (2.6.4)", "label": "PQR789 (2.6.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "YZA678 (3.6.7)", "label": "YZA678 (3.6.7)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ567 (2.6.3)", "label": "HIJ567 (2.6.3)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "PQR456 (3.6.4)", "label": "PQR456 (3.6.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "red", "font": {"color": "black"}, "id": "YZA345 (2.6.4)", "label": "YZA345 (2.6.4)", "shape": "dot", "title": "Vendor: VendorA\nBuilding: BuildingX"}, {"color": "green", "font": {"color": "black"}, "id": "BuildingY", "label": "BuildingY", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "DEF456 (2.6.4)", "label": "DEF456 (2.6.4)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "MNO345 (2.4.3)", "label": "MNO345 (2.4.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "VWX234 (3.4.6)", "label": "VWX234 (3.4.6)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "EFG123 (2.4.5)", "label": "EFG123 (2.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "NOP012 (3.5.3)", "label": "NOP012 (3.5.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "WXY901 (2.6.5)", "label": "WXY901 (2.6.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "FGH890 (3.6.5)", "label": "FGH890 (3.6.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "PQR789 (2.4.6)", "label": "PQR789 (2.4.6)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "YZA678 (3.5.7)", "label": "YZA678 (3.5.7)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ567 (2.6.4)", "label": "HIJ567 (2.6.4)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "QRS456 (3.6.7)", "label": "QRS456 (3.6.7)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "ZAB345 (2.3.5)", "label": "ZAB345 (2.3.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "IJK234 (3.4.5)", "label": "IJK234 (3.4.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "BCD012 (3.6.4)", "label": "BCD012 (3.6.4)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "TUV890 (3.6.3)", "label": "TUV890 (3.6.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "PQR678 (3.4.7)", "label": "PQR678 (3.4.7)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "YZA567 (2.6.4)", "label": "YZA567 (2.6.4)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ456 (3.5.7)", "label": "HIJ456 (3.5.7)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "QRS345 (2.6.3)", "label": "QRS345 (2.6.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "ZAB234 (3.6.4)", "label": "ZAB234 (3.6.4)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "IJK123 (2.5.3)", "label": "IJK123 (2.5.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "STU012 (3.5.5)", "label": "STU012 (3.5.5)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "BCD901 (2.5.6)", "label": "BCD901 (2.5.6)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "KLM901 (3.5.7)", "label": "KLM901 (3.5.7)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "STU789 (2.5.3)", "label": "STU789 (2.5.3)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "red", "font": {"color": "black"}, "id": "BCD678 (3.5.6)", "label": "BCD678 (3.5.6)", "shape": "dot", "title": "Vendor: VendorB\nBuilding: BuildingY"}, {"color": "green", "font": {"color": "black"}, "id": "BuildingZ", "label": "BuildingZ", "shape": "dot"}, {"color": "red", "font": {"color": "black"}, "id": "GHI789 (2.3.6)", "label": "GHI789 (2.3.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "PQR678 (3.6.5)", "label": "PQR678 (3.6.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "YZA567 (2.6.3)", "label": "YZA567 (2.6.3)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "HIJ456 (3.6.4)", "label": "HIJ456 (3.6.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "QRS345 (2.3.6)", "label": "QRS345 (2.3.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "ZAB234 (3.5.2)", "label": "ZAB234 (3.5.2)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "IJK123 (2.3.4)", "label": "IJK123 (2.3.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "STU012 (3.6.4)", "label": "STU012 (3.6.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "BCD901 (2.3.6)", "label": "BCD901 (2.3.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "KLM890 (3.5.5)", "label": "KLM890 (3.5.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "TUV789 (2.5.4)", "label": "TUV789 (2.5.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "CDE678 (3.5.7)", "label": "CDE678 (3.5.7)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "LMN567 (2.5.6)", "label": "LMN567 (2.5.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "VWX456 (3.5.2)", "label": "VWX456 (3.5.2)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "EFG345 (2.6.3)", "label": "EFG345 (2.6.3)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "NOP234 (3.4.7)", "label": "NOP234 (3.4.7)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "ABC123 (2.3.4)", "label": "ABC123 (2.3.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "JKL012 (3.6.4)", "label": "JKL012 (3.6.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "STU901 (2.3.5)", "label": "STU901 (2.3.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "BCD890 (3.6.3)", "label": "BCD890 (3.6.3)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "KLM789 (2.3.6)", "label": "KLM789 (2.3.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "TUV678 (3.5.6)", "label": "TUV678 (3.5.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "LMN456 (3.4.6)", "label": "LMN456 (3.4.6)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "VWX345 (2.3.4)", "label": "VWX345 (2.3.4)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "EFG234 (3.4.5)", "label": "EFG234 (3.4.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "VWX012 (3.4.7)", "label": "VWX012 (3.4.7)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}, {"color": "red", "font": {"color": "black"}, "id": "EFG901 (2.3.5)", "label": "EFG901 (2.3.5)", "shape": "dot", "title": "Vendor: VendorC\nBuilding: BuildingZ"}]);
+                  edges = new vis.DataSet([{"from": "VendorA", "to": "Building1"}, {"from": "VendorB", "to": "Building1"}, {"from": "VendorC", "to": "Building1"}, {"from": "Building1", "to": "ABC123 (2.4.5)"}, {"from": "Building1", "to": "MNO345 (2.4.5)"}, {"from": "Building1", "to": "YZA567 (2.4.5)"}, {"from": "Building1", "to": "KLM789 (2.4.5)"}, {"from": "Building1", "to": "WXY901 (2.4.5)"}, {"from": "Building1", "to": "IJK123 (2.4.5)"}, {"from": "Building1", "to": "VWX345 (2.4.5)"}, {"from": "Building1", "to": "HIJ567 (2.4.5)"}, {"from": "Building1", "to": "TUV789 (2.4.5)"}, {"from": "Building1", "to": "FGH901 (2.4.5)"}, {"from": "Building1", "to": "STU123 (2.4.5)"}, {"from": "Building1", "to": "EFG345 (2.4.5)"}, {"from": "Building1", "to": "QRS567 (2.4.5)"}, {"from": "VendorB", "to": "Building2"}, {"from": "VendorC", "to": "Building2"}, {"from": "VendorA", "to": "Building2"}, {"from": "Building2", "to": "DEF456 (2.4.5)"}, {"from": "Building2", "to": "PQR678 (2.4.5)"}, {"from": "Building2", "to": "BCD890 (2.4.5)"}, {"from": "Building2", "to": "NOP012 (2.4.5)"}, {"from": "Building2", "to": "ZAB234 (2.4.5)"}, {"from": "Building2", "to": "LMN456 (2.4.5)"}, {"from": "Building2", "to": "YZA678 (2.4.5)"}, {"from": "Building2", "to": "KLM890 (2.4.5)"}, {"from": "Building2", "to": "WXY012 (2.4.5)"}, {"from": "Building2", "to": "IJK234 (2.4.5)"}, {"from": "Building2", "to": "VWX456 (2.4.5)"}, {"from": "Building2", "to": "HIJ678 (2.4.5)"}, {"from": "Building2", "to": "TUV890 (2.4.5)"}, {"from": "VendorA", "to": "Building3"}, {"from": "VendorC", "to": "Building3"}, {"from": "VendorB", "to": "Building3"}, {"from": "Building3", "to": "GHI789 (2.4.6)"}, {"from": "Building3", "to": "STU901 (2.4.5)"}, {"from": "Building3", "to": "EFG123 (2.4.6)"}, {"from": "Building3", "to": "QRS345 (2.4.5)"}, {"from": "Building3", "to": "CDE567 (2.4.6)"}, {"from": "Building3", "to": "PQR789 (2.4.5)"}, {"from": "Building3", "to": "BCD901 (2.4.6)"}, {"from": "Building3", "to": "NOP123 (2.4.5)"}, {"from": "Building3", "to": "ZAB345 (2.4.6)"}, {"from": "Building3", "to": "LMN567 (2.4.5)"}, {"from": "Building3", "to": "YZA789 (2.4.6)"}, {"from": "Building3", "to": "KLM901 (2.4.5)"}, {"from": "VendorC", "to": "Building4"}, {"from": "VendorA", "to": "Building4"}, {"from": "VendorB", "to": "Building4"}, {"from": "Building4", "to": "JKL012 (2.4.5)"}, {"from": "Building4", "to": "VWX234 (2.4.5)"}, {"from": "Building4", "to": "HIJ456 (2.4.5)"}, {"from": "Building4", "to": "TUV678 (2.4.5)"}, {"from": "Building4", "to": "FGH890 (2.4.5)"}, {"from": "Building4", "to": "STU012 (2.4.5)"}, {"from": "Building4", "to": "EFG234 (2.4.5)"}, {"from": "Building4", "to": "QRS456 (2.4.5)"}, {"from": "Building4", "to": "CDE678 (2.4.5)"}, {"from": "Building4", "to": "PQR890 (2.4.5)"}, {"from": "Building4", "to": "BCD012 (2.4.5)"}, {"from": "Building4", "to": "NOP234 (2.4.5)"}, {"from": "Vendor Name", "to": "Building"}, {"from": "Building", "to": "Serial Number (Driver Version)"}, {"from": "VendorA", "to": "BuildingX"}, {"from": "BuildingX", "to": "ABC123 (3.5.7)"}, {"from": "BuildingX", "to": "JKL012 (3.5.2)"}, {"from": "BuildingX", "to": "STU901 (2.5.4)"}, {"from": "BuildingX", "to": "BCD890 (3.5.7)"}, {"from": "BuildingX", "to": "KLM789 (2.5.6)"}, {"from": "BuildingX", "to": "TUV678 (3.4.7)"}, {"from": "BuildingX", "to": "CDE567 (2.4.3)"}, {"from": "BuildingX", "to": "LMN456 (3.5.4)"}, {"from": "BuildingX", "to": "VWX345 (2.5.3)"}, {"from": "BuildingX", "to": "EFG234 (3.4.6)"}, {"from": "BuildingX", "to": "NOP123 (2.4.3)"}, {"from": "BuildingX", "to": "WXY012 (3.4.6)"}, {"from": "BuildingX", "to": "FGH901 (2.6.4)"}, {"from": "BuildingX", "to": "PQR890 (3.6.3)"}, {"from": "BuildingX", "to": "YZA789 (2.3.6)"}, {"from": "BuildingX", "to": "HIJ678 (3.5.5)"}, {"from": "BuildingX", "to": "QRS567 (2.5.6)"}, {"from": "BuildingX", "to": "DEF456 (3.5.6)"}, {"from": "BuildingX", "to": "MNO345 (2.5.3)"}, {"from": "BuildingX", "to": "VWX234 (3.5.6)"}, {"from": "BuildingX", "to": "EFG123 (2.4.6)"}, {"from": "BuildingX", "to": "NOP012 (3.4.5)"}, {"from": "BuildingX", "to": "WXY901 (2.3.5)"}, {"from": "BuildingX", "to": "FGH890 (3.5.7)"}, {"from": "BuildingX", "to": "PQR789 (2.6.4)"}, {"from": "BuildingX", "to": "YZA678 (3.6.7)"}, {"from": "BuildingX", "to": "HIJ567 (2.6.3)"}, {"from": "BuildingX", "to": "PQR456 (3.6.4)"}, {"from": "BuildingX", "to": "YZA345 (2.6.4)"}, {"from": "VendorB", "to": "BuildingY"}, {"from": "BuildingY", "to": "DEF456 (2.6.4)"}, {"from": "BuildingY", "to": "MNO345 (2.4.3)"}, {"from": "BuildingY", "to": "VWX234 (3.4.6)"}, {"from": "BuildingY", "to": "EFG123 (2.4.5)"}, {"from": "BuildingY", "to": "NOP012 (3.5.3)"}, {"from": "BuildingY", "to": "WXY901 (2.6.5)"}, {"from": "BuildingY", "to": "FGH890 (3.6.5)"}, {"from": "BuildingY", "to": "PQR789 (2.4.6)"}, {"from": "BuildingY", "to": "YZA678 (3.5.7)"}, {"from": "BuildingY", "to": "HIJ567 (2.6.4)"}, {"from": "BuildingY", "to": "QRS456 (3.6.7)"}, {"from": "BuildingY", "to": "ZAB345 (2.3.5)"}, {"from": "BuildingY", "to": "IJK234 (3.4.5)"}, {"from": "BuildingY", "to": "STU123 (2.4.5)"}, {"from": "BuildingY", "to": "BCD012 (3.6.4)"}, {"from": "BuildingY", "to": "KLM901 (2.4.5)"}, {"from": "BuildingY", "to": "TUV890 (3.6.3)"}, {"from": "BuildingY", "to": "GHI789 (2.4.6)"}, {"from": "BuildingY", "to": "PQR678 (3.4.7)"}, {"from": "BuildingY", "to": "YZA567 (2.6.4)"}, {"from": "BuildingY", "to": "HIJ456 (3.5.7)"}, {"from": "BuildingY", "to": "QRS345 (2.6.3)"}, {"from": "BuildingY", "to": "ZAB234 (3.6.4)"}, {"from": "BuildingY", "to": "IJK123 (2.5.3)"}, {"from": "BuildingY", "to": "STU012 (3.5.5)"}, {"from": "BuildingY", "to": "BCD901 (2.5.6)"}, {"from": "BuildingY", "to": "KLM901 (3.5.7)"}, {"from": "BuildingY", "to": "STU789 (2.5.3)"}, {"from": "BuildingY", "to": "BCD678 (3.5.6)"}, {"from": "VendorC", "to": "BuildingZ"}, {"from": "BuildingZ", "to": "GHI789 (2.3.6)"}, {"from": "BuildingZ", "to": "PQR678 (3.6.5)"}, {"from": "BuildingZ", "to": "YZA567 (2.6.3)"}, {"from": "BuildingZ", "to": "HIJ456 (3.6.4)"}, {"from": "BuildingZ", "to": "QRS345 (2.3.6)"}, {"from": "BuildingZ", "to": "ZAB234 (3.5.2)"}, {"from": "BuildingZ", "to": "IJK123 (2.3.4)"}, {"from": "BuildingZ", "to": "STU012 (3.6.4)"}, {"from": "BuildingZ", "to": "BCD901 (2.3.6)"}, {"from": "BuildingZ", "to": "KLM890 (3.5.5)"}, {"from": "BuildingZ", "to": "TUV789 (2.5.4)"}, {"from": "BuildingZ", "to": "CDE678 (3.5.7)"}, {"from": "BuildingZ", "to": "LMN567 (2.5.6)"}, {"from": "BuildingZ", "to": "VWX456 (3.5.2)"}, {"from": "BuildingZ", "to": "EFG345 (2.6.3)"}, {"from": "BuildingZ", "to": "NOP234 (3.4.7)"}, {"from": "BuildingZ", "to": "ABC123 (2.3.4)"}, {"from": "BuildingZ", "to": "JKL012 (3.6.4)"}, {"from": "BuildingZ", "to": "STU901 (2.3.5)"}, {"from": "BuildingZ", "to": "BCD890 (3.6.3)"}, {"from": "BuildingZ", "to": "KLM789 (2.3.6)"}, {"from": "BuildingZ", "to": "TUV678 (3.5.6)"}, {"from": "BuildingZ", "to": "CDE567 (2.4.6)"}, {"from": "BuildingZ", "to": "LMN456 (3.4.6)"}, {"from": "BuildingZ", "to": "VWX345 (2.3.4)"}, {"from": "BuildingZ", "to": "EFG234 (3.4.5)"}, {"from": "BuildingZ", "to": "NOP123 (2.4.5)"}, {"from": "BuildingZ", "to": "VWX012 (3.4.7)"}, {"from": "BuildingZ", "to": "EFG901 (2.3.5)"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+                    network.on("click", neighbourhoodHighlight);
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
