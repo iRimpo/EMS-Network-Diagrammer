@@ -2,6 +2,8 @@
 
 A tool to create visualizations/mappings of the networks on the Energy Management Systems at Lawrence Berkeley National Laboratory.
 
+### Work in progress until 8/9/2024
+
 ### https://irimpo.github.io/EMS-Network-Diagrammer/
 
 ## Purpose
