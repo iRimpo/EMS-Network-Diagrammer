@@ -4,7 +4,7 @@ A tool to create visualizations/mappings of the networks on the Energy Managemen
 
 #### Work in progress until 8/9/2024
 
-### https://irimpo.github.io/EMS-Network-Diagrammer/
+### https://irimpo.github.io/EMS-Network-Diagrammer/ - DEMO
 
 ## Purpose
 There are more than 800 controllers at Lawrence Berkeley National Laboratory that relay critical data for maintenance. This project automates the tedious job of creating diagrams of the network, providing a creative and efficient way to display all the controllers and their relationships by using CSV file reports from the building automation sytems: WebCTRL, Metasys, Lutron, Quantum, Wattstopper 
