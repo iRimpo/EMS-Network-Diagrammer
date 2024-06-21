@@ -49,9 +49,9 @@ def webctrl(csv_file_path, output_file_path, net=None):
             location = row['Location']
             
             controller_label = f"{serial_number}"
-            tooltip = f"Vendor: {vendor_name}<br>Building: {index}<br>Boot Version: {boot_version}<br>Driver Version: {driver_version}<br>Location: {location}"
+            tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Boot Version:</strong> {boot_version}<br><strong>Driver Version:</strong> {driver_version}<br><strong>Location:</strong> {location}"
             
-            net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
             net.add_edge(str(index), str(controller_label))
 
     # Handle 'Unknown' building separately
@@ -62,7 +62,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
         serial_number = row['Serial Number']
         driver_version = row['Driver Version']
         controller_label = f"{serial_number}"
-        tooltip = f"Vendor: {vendor_name}\nBuilding: Unknown"
+        tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> Unknown"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
 
@@ -74,7 +74,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
                 break
         
         if not is_already_connected:
-            net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
             net.add_edge(str(vendor_name), str(controller_label))
 
 # ---------------------------- Metasys ----------------------------
@@ -123,9 +123,9 @@ def metasys(csv_file_path, output_file_path, net=None):
             vendor_name = row['Vendor Name']
             
             controller_label = f"{name}"
-            tooltip = f"Vendor: {vendor_name}<br>Building: {index}<br>Description: {description}"
+            tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
             
-            net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
             net.add_edge(str(index), str(controller_label))
 
     # Handle 'Unknown' building separately
@@ -136,7 +136,7 @@ def metasys(csv_file_path, output_file_path, net=None):
         name = row['Item']
         description = row['Description']
         controller_label = f"{name}"
-        tooltip = f"Vendor: {vendor_name}\nBuilding: {index}\nDescription: {description}"
+        tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
 
@@ -148,5 +148,5 @@ def metasys(csv_file_path, output_file_path, net=None):
                 break
         
         if not is_already_connected:
-            net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
             net.add_edge(str(vendor_name), str(controller_label))

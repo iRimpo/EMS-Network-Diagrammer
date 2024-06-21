@@ -5,6 +5,7 @@ from pyvis.network import Network
 # Read the CSV file paths
 webctrl_data = 'webctrl.csv'
 metasys_data = 'metasys.csv'
+demo = 'demo.csv'
 
 # Output HTML file path
 output_file_path = 'Diagram.html'
@@ -22,6 +23,8 @@ metasys(metasys_data, output_file_path, net=net)
 
 # Show buttons and apply settings/filters
 net.show_buttons(filter_=['physics'])
+net.toggle_physics(True)
+net.force_atlas_2based()
 
 # Display the network diagram in the HTML file
 net.show(output_file_path, notebook=False)
@@ -38,7 +41,7 @@ dynamic_js = """
         function updateNodeInfo(nodeId) {
             var node = network.body.data.nodes.get(nodeId);
             var html = '<h3>Node Information</h3><div>';
-            html += node.title || '';  // Use node title as tooltip content
+            html += node.tooltip || '';  // Use node title as tooltip content
             html += '</div>';
             nodeInfo.innerHTML = html;
             nodeInfo.style.display = 'block';  // Show node info
