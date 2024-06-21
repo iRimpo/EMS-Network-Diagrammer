@@ -43,11 +43,13 @@ def webctrl(csv_file_path, output_file_path, net=None):
         for _, row in building_controllers.iterrows():
             # Ensure column names match those in your CSV file
             serial_number = row['Serial Number']
+            boot_version = row['Boot Version']
             driver_version = row['Driver Version']
             vendor_name = row['Vendor Name']
+            location = row['Location']
             
-            controller_label = f"{serial_number} ({driver_version})"
-            tooltip = f"Vendor: {vendor_name}\nBuilding: {index}"
+            controller_label = f"{serial_number}"
+            tooltip = f"Vendor: {vendor_name}<br>Building: {index}<br>Boot Version: {boot_version}<br>Driver Version: {driver_version}<br>Location: {location}"
             
             net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
             net.add_edge(str(index), str(controller_label))
@@ -59,7 +61,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
         vendor_name = row['Vendor Name']
         serial_number = row['Serial Number']
         driver_version = row['Driver Version']
-        controller_label = f"{serial_number} ({driver_version})"
+        controller_label = f"{serial_number}"
         tooltip = f"Vendor: {vendor_name}\nBuilding: Unknown"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
@@ -121,7 +123,7 @@ def metasys(csv_file_path, output_file_path, net=None):
             vendor_name = row['Vendor Name']
             
             controller_label = f"{name}"
-            tooltip = f"Vendor: {vendor_name}\nBuilding: {index}\nDescription: {description}"
+            tooltip = f"Vendor: {vendor_name}<br>Building: {index}<br>Description: {description}"
             
             net.add_node(str(controller_label), label=str(controller_label), title=tooltip, color='red')
             net.add_edge(str(index), str(controller_label))

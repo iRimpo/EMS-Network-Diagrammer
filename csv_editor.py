@@ -58,8 +58,5 @@ def metasys_csv():
     # Save the updated DataFrame back to a CSV file
     df.to_csv(csv_file, index=False)
 
-# Call the function to update the CSV
-metasys_csv()
-
-
 # Tester
+metasys_csv()

@@ -2,25 +2,83 @@ import pandas as pd
 from diagrammers import webctrl, metasys
 from pyvis.network import Network
 
-# Read the CSV file
+# Read the CSV file paths
 webctrl_data = 'webctrl.csv'
 metasys_data = 'metasys.csv'
 
-# Generate and save the network diagram
-output_file_path = 'Diagram.html'  # Output file
+# Output HTML file path
+output_file_path = 'Diagram.html'
 
-# Create a Pyvis Network object, webctrl
-net = Network(height='1000px', width='auto', neighborhood_highlight=True, select_menu=True, bgcolor="white", font_color="black")
+# Determine the desired initial height and width percentages
+initial_height_percent = 70
+initial_width_percent = 70
 
-# --------------- Diagrammers ---------------
+# Create a Pyvis Network object
+net = Network(height='500px', width='70%', neighborhood_highlight=True, select_menu=True, bgcolor="white", font_color="black")
+
+# Call diagrammers to generate network diagrams
 webctrl(webctrl_data, output_file_path, net=net)
 metasys(metasys_data, output_file_path, net=net)
 
-# pyvis settings/filters
+# Show buttons and apply settings/filters
 net.show_buttons(filter_=['physics'])
 
-# Show the network in a file
+# Display the network diagram in the HTML file
 net.show(output_file_path, notebook=False)
+
+# JavaScript for dynamically setting height and width based on screen size
+dynamic_js = """
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var network = window.network;
+        var container = document.getElementById('mynetwork');
+        var nodeInfo = document.getElementById('node-info');
+        
+        // Function to update node information
+        function updateNodeInfo(nodeId) {
+            var node = network.body.data.nodes.get(nodeId);
+            var html = '<h3>Node Information</h3><div>';
+            html += node.title || '';  // Use node title as tooltip content
+            html += '</div>';
+            nodeInfo.innerHTML = html;
+            nodeInfo.style.display = 'block';  // Show node info
+        }
+        
+        // Function to reset node information to default message
+        function resetNodeInfo() {
+            nodeInfo.innerHTML = '<h3>Node Information</h3><div id="info-content">Click on a node to see details here.</div>';
+            nodeInfo.style.display = 'block';  // Show node info
+        }
+        
+        // Event listener for network click
+        network.on("click", function(params) {
+            if (params.nodes.length > 0) {
+                var nodeId = params.nodes[0];
+                updateNodeInfo(nodeId);
+            } else {
+                resetNodeInfo();
+            }
+        });
+        
+        // Initial resize function
+        function resizeNetwork() {
+            var windowHeight = window.innerHeight;
+            var windowWidth = window.innerWidth;
+            var height = Math.floor(windowHeight * %d / 100);
+            var width = Math.floor(windowWidth * %d / 100);
+            container.style.height = height + 'px';
+            container.style.width = width + 'px';
+            network.setSize(width + 'px', height + 'px');
+        }
+        
+        // Call resize function on page load
+        resizeNetwork();
+        
+        // Add resize listener
+        window.addEventListener('resize', resizeNetwork);
+    });
+</script>
+""" % (initial_height_percent, initial_width_percent)
 
 # Read the generated HTML file and insert the header
 with open(output_file_path, 'r') as file:
@@ -35,8 +93,21 @@ header_html = '''
 </header>
 '''
 
-# Insert the header at the beginning of the HTML content
-html_content = html_content.replace('<head>', f'<head>\n{header_html}')
+# Define the container for the Pyvis network and the text box
+container_html = '''
+<div style="display: flex;">
+    <div id="mynetwork"></div>
+    <div id="node-info" style="width: 30%; padding: 10px; border-left: 1px solid #ccc; display: block;">
+        <h3>Node Information</h3>
+        <div id="info-content">Click on a node to see details here.</div>
+    </div>
+</div>
+'''
+
+# Insert the header and container HTML at the beginning of the HTML content
+html_content = html_content.replace('<body>', f'<body>\n{header_html}\n{container_html}')
+# Insert the dynamic JavaScript before the closing body tag
+html_content = html_content.replace('</body>', dynamic_js + '</body>')
 
 # Write the modified content back to the HTML file
 with open(output_file_path, 'w') as file:
