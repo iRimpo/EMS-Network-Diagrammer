@@ -19,7 +19,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
     for x in vendor:
         if x not in vendors:
             vendors.add(x)
-            net.add_node(str(x), label=str(x), color='blue')
+            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70)
 
     # Add nodes and edges based on the CSV file
     buildings = df['Building'].unique()
@@ -29,7 +29,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        net.add_node(str(index), label=str(index), color='green')
+        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40)
         
         # Get the unique vendors for this building
         building_vendors = df[df['Building'] == index]['Vendor Name'].unique()
@@ -51,7 +51,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
             controller_label = f"{serial_number}"
             tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Boot Version:</strong> {boot_version}<br><strong>Driver Version:</strong> {driver_version}<br><strong>Location:</strong> {location}"
             
-            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(index), str(controller_label))
 
     # Handle 'Unknown' building separately
@@ -74,7 +74,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
                 break
         
         if not is_already_connected:
-            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(vendor_name), str(controller_label))
 
 # ---------------------------- Metasys ----------------------------
@@ -95,7 +95,7 @@ def metasys(csv_file_path, output_file_path, net=None):
     for x in vendor:
         if x not in vendors:
             vendors.add(x)
-            net.add_node(str(x), label=str(x), color='blue')
+            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70)
 
     # Add nodes and edges based on the CSV file
     buildings = df['Building'].unique()
@@ -105,7 +105,7 @@ def metasys(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        net.add_node(str(index), label=str(index), color='green')
+        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40)
         
         # Get the unique vendors for this building
         building_vendors = df[df['Building'] == index]['Vendor Name'].unique()
@@ -125,7 +125,7 @@ def metasys(csv_file_path, output_file_path, net=None):
             controller_label = f"{name}"
             tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
             
-            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(index), str(controller_label))
 
     # Handle 'Unknown' building separately
@@ -148,5 +148,5 @@ def metasys(csv_file_path, output_file_path, net=None):
                 break
         
         if not is_already_connected:
-            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red')
+            net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(vendor_name), str(controller_label))
