@@ -19,14 +19,29 @@ initial_width_percent = 70
 net = Network(height='500px', width='70%', neighborhood_highlight=True, select_menu=True, bgcolor="white", font_color="black")
 
 # Call diagrammers to generate network diagrams
+#webctrl(demo, output_file_path, net=net)
 webctrl(webctrl_data, output_file_path, net=net)
 metasys(metasys_data, output_file_path, net=net)
 lutron(lutron_data, output_file_path, net=net)
 
 # Show buttons and apply settings/filters
-net.show_buttons(filter_=['physics'])
-net.toggle_physics(True)
-net.force_atlas_2based()
+# net.show_buttons(filter_=['physics'])
+# net.toggle_physics(True)
+# net.force_atlas_2based()
+net.set_options("""
+const options = {
+  "physics": {
+    "forceAtlas2Based": {
+      "theta": 1,
+      "gravitationalConstant": -102,
+      "springLength": 220,
+      "avoidOverlap": 0.66
+    },
+    "minVelocity": 0.75,
+    "solver": "forceAtlas2Based"
+  }
+}
+""")
 
 # Display the network diagram in the HTML file
 net.show(output_file_path, notebook=False)
