@@ -58,5 +58,22 @@ def metasys_csv():
     # Save the updated DataFrame back to a CSV file
     df.to_csv(csv_file, index=False)
 
+def lutron_csv():
+    csv_file = 'lutron.csv'
+
+    df = pd.read_csv(csv_file)
+    df_loc = df[['Area Name']]
+    df['Building'] = 'Unknown'
+
+    for index in range(0, len(df_loc)):
+        row = df_loc.at[index, 'Area Name']
+        bld_num = row[14:16]
+        df.__getitem__('Building').__setitem__(index, bld_num)
+   
+    df['Vendor Name'] = 'Lutron'
+
+    # Save the updated DataFrame back to a CSV file
+    df.to_csv(csv_file, index=False)
 # Tester
-metasys_csv()
+#metasys_csv()
+lutron_csv()

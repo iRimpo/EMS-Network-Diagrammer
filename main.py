@@ -1,10 +1,11 @@
 import pandas as pd
-from diagrammers import webctrl, metasys
+from diagrammers import webctrl, metasys, lutron
 from pyvis.network import Network
 
 # Read the CSV file paths
 webctrl_data = 'webctrl.csv'
 metasys_data = 'metasys.csv'
+lutron_data = "lutron.csv"
 demo = 'demo.csv'
 
 # Output HTML file path
@@ -20,6 +21,7 @@ net = Network(height='500px', width='70%', neighborhood_highlight=True, select_m
 # Call diagrammers to generate network diagrams
 webctrl(webctrl_data, output_file_path, net=net)
 metasys(metasys_data, output_file_path, net=net)
+lutron(lutron_data, output_file_path, net=net)
 
 # Show buttons and apply settings/filters
 net.show_buttons(filter_=['physics'])
