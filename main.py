@@ -11,6 +11,7 @@ demo = 'demo.csv'
 # Output HTML file path
 output_file_path = 'Diagram.html'
 demo_path = "index.html"
+
 # Determine the desired initial height and width percentages
 initial_height_percent = 70
 initial_width_percent = 70
@@ -19,10 +20,10 @@ initial_width_percent = 70
 net = Network(height='500px', width='70%', neighborhood_highlight=True, select_menu=True, bgcolor="white", font_color="black")
 
 # Call diagrammers to generate network diagrams
-# webctrl(demo, demo_path, net=net)
-webctrl(webctrl_data, output_file_path, net=net)
-metasys(metasys_data, output_file_path, net=net)
-lutron(lutron_data, output_file_path, net=net)
+webctrl(demo, output_file_path, net=net)
+# webctrl(webctrl_data, output_file_path, net=net)
+# metasys(metasys_data, output_file_path, net=net)
+# lutron(lutron_data, output_file_path, net=net)
 
 # Show buttons and apply settings/filters
 # net.show_buttons(filter_=['physics'])
@@ -35,13 +36,22 @@ const options = {
       "theta": 1,
       "gravitationalConstant": -102,
       "springLength": 220,
-      "avoidOverlap": 0.66
+      "avoidOverlap": 0
     },
     "minVelocity": 0.75,
     "solver": "forceAtlas2Based"
   }
 }
 """)
+
+# Apply stabilization and disable physics after initialization
+stabilization_js = """
+var network = window.network;
+network.on("stabilizationIterationsDone", function () {
+  network.stopSimulation();
+});
+network.stabilize(100);
+"""
 
 # Display the network diagram in the HTML file
 net.show(output_file_path, notebook=False)
@@ -126,8 +136,8 @@ container_html = '''
 
 # Insert the header and container HTML at the beginning of the HTML content
 html_content = html_content.replace('<body>', f'<body>\n{header_html}\n{container_html}')
-# Insert the dynamic JavaScript before the closing body tag
-html_content = html_content.replace('</body>', dynamic_js + '</body>')
+# Insert the dynamic JavaScript and stabilization JavaScript before the closing body tag
+html_content = html_content.replace('</body>', dynamic_js + stabilization_js + '</body>')
 
 # Write the modified content back to the HTML file
 with open(output_file_path, 'w') as file:

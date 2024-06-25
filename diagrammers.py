@@ -1,4 +1,5 @@
 import pandas as pd
+from building_info import add_building_images
 from pyvis.network import Network
 
 # ---------------------------- WebCTRL ----------------------------
@@ -19,7 +20,8 @@ def webctrl(csv_file_path, output_file_path, net=None):
     for x in vendor:
         if x not in vendors:
             vendors.add(x)
-            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70)
+            tooltip = f"<img src='images/vendor.png' width='100' height='100'><br><strong>Vendor:</strong> {x}"
+            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70, tooltip=tooltip)
 
     # Add nodes and edges based on the CSV file
     buildings = df['Building'].unique()
@@ -29,7 +31,8 @@ def webctrl(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40)
+        tooltip = f"<img src='images/location.png' width='100' height='100'><br><strong>Building:</strong> {index}"
+        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
         building_vendors = df[df['Building'] == index]['Vendor Name'].unique()
@@ -49,7 +52,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
             location = row['Location']
             
             controller_label = f"{serial_number}"
-            tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Boot Version:</strong> {boot_version}<br><strong>Driver Version:</strong> {driver_version}<br><strong>Location:</strong> {location}"
+            tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Boot Version:</strong> {boot_version}<br><strong>Driver Version:</strong> {driver_version}<br><strong>Location:</strong> {location}"
             
             net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(index), str(controller_label))
@@ -62,7 +65,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
         serial_number = row['Serial Number']
         driver_version = row['Driver Version']
         controller_label = f"{serial_number}"
-        tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> Unknown"
+        tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> Unknown"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
 
@@ -95,7 +98,8 @@ def metasys(csv_file_path, output_file_path, net=None):
     for x in vendor:
         if x not in vendors:
             vendors.add(x)
-            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70)
+            tooltip = f"<img src='images/vendor.png' width='100' height='100'><br><strong>Vendor:</strong> {x}"
+            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70, tooltip=tooltip)
 
     # Add nodes and edges based on the CSV file
     buildings = df['Building'].unique()
@@ -105,7 +109,8 @@ def metasys(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40)
+        tooltip = f"<img src='images/location.png' width='100' height='100'><br><strong>Building:</strong> {index}"
+        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
         building_vendors = df[df['Building'] == index]['Vendor Name'].unique()
@@ -123,7 +128,7 @@ def metasys(csv_file_path, output_file_path, net=None):
             vendor_name = row['Vendor Name']
             
             controller_label = f"{name}"
-            tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
+            tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
             
             net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(index), str(controller_label))
@@ -136,7 +141,7 @@ def metasys(csv_file_path, output_file_path, net=None):
         name = row['Item']
         description = row['Description']
         controller_label = f"{name}"
-        tooltip = f"<strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
+        tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Description:</strong> {description}"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
 
@@ -169,7 +174,8 @@ def lutron(csv_file_path, output_file_path, net=None):
     for x in vendor:
         if x not in vendors:
             vendors.add(x)
-            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70)
+            tooltip = f"<img src='images/vendor.png' width='100' height='100'><br><strong>Vendor:</strong> {x}"
+            net.add_node(str(x), label=str(x), color='blue', image='images/vendor.png', shape='image', size=70, tooltip=tooltip)
 
     # Add nodes and edges based on the CSV file
     buildings = df['Building'].unique()
@@ -179,7 +185,8 @@ def lutron(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40)
+        tooltip = f"<img src='images/location.png' width='100' height='100'><br><strong>Building:</strong> {index}"
+        net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
         building_vendors = df[df['Building'] == index]['Vendor Name'].unique()
@@ -192,30 +199,12 @@ def lutron(csv_file_path, output_file_path, net=None):
         
         for _, row in building_controllers.iterrows():
             # Ensure column names match those in your CSV file
-            serial_number = row['Serial Number']
-            model_number = row['Model Number']
+            name = row['Processor Serial Number']
+            processor_version = row['Processor Version']
             vendor_name = row['Vendor Name']
-            area_name = row['Area Name']
-            device_name = row['Device Name']
-            device_type = row['Device Type']
-            activation_status = row['Activation Status']
-            equipment_room = row['Equipment Room']
-            panel = row['Panel']
-            processor = row['Processor']
-            processor_ip = row['Processor IP']
             
-            controller_label = f"{serial_number}"
-            tooltip = f"<strong>Vendor:</strong> {vendor_name}<br>" \
-          f"<strong>Model Number:</strong> {model_number}<br>" \
-          f"<strong>Area:</strong> {area_name}<br>" \
-          f"<strong>Device Name:</strong> {device_name}<br>" \
-          f"<strong>Device Type:</strong> {device_type}<br>" \
-          f"<strong>Activation Status:</strong> {activation_status}<br>" \
-          f"<strong>Equipment Room:</strong> {equipment_room}<br>" \
-          f"<strong>Panel:</strong> {panel}<br>" \
-          f"<strong>Processor:</strong> {processor}<br>" \
-          f"<strong>Processor IP:</strong> {processor_ip}"
-
+            controller_label = f"{name}"
+            tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Processor Version:</strong> {processor_version}"
             
             net.add_node(str(controller_label), label=str(controller_label), tooltip=tooltip, color='red', image='images/controller.png', shape='image')
             net.add_edge(str(index), str(controller_label))
@@ -224,29 +213,11 @@ def lutron(csv_file_path, output_file_path, net=None):
     unknown_controllers = df[df['Building'] == 'Unknown']
 
     for _, row in unknown_controllers.iterrows():
-        serial_number = row['Serial Number']
-        model_number = row['Model Number']
         vendor_name = row['Vendor Name']
-        area_name = row['Area Name']
-        device_name = row['Device Name']
-        device_type = row['Device Type']
-        activation_status = row['Activation Status']
-        equipment_room = row['Equipment Room']
-        panel = row['Panel']
-        processor = row['Processor']
-        processor_ip = row['Processor IP']
-            
-        controller_label = f"{serial_number}"
-        tooltip = f"<strong>Vendor:</strong> {vendor_name}<br>" \
-          f"<strong>Model Number:</strong> {model_number}<br>" \
-          f"<strong>Area:</strong> {area_name}<br>" \
-          f"<strong>Device Name:</strong> {device_name}<br>" \
-          f"<strong>Device Type:</strong> {device_type}<br>" \
-          f"<strong>Activation Status:</strong> {activation_status}<br>" \
-          f"<strong>Equipment Room:</strong> {equipment_room}<br>" \
-          f"<strong>Panel:</strong> {panel}<br>" \
-          f"<strong>Processor:</strong> {processor}<br>" \
-          f"<strong>Processor IP:</strong> {processor_ip}"
+        name = row['Processor Serial Number']
+        processor_version = row['Processor Version']
+        controller_label = f"{name}"
+        tooltip = f"<img src='images/controller.png' width='100' height='100'><br><strong>Vendor:</strong> {vendor_name}<br><strong>Building:</strong> {index}<br><strong>Processor Version:</strong> {processor_version}"
         
         existing_edges = [(edge['from'], edge['to']) for edge in net.get_edges()]
 

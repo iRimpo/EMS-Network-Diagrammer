@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 def webctrl_csv():
     csv_file = 'webctrl.csv'
@@ -24,13 +25,16 @@ def webctrl_csv():
         row = df_loc.at[index, 'Location']  # df_loc.at[x, 'Location'] accesses the value in the 'Location' column for each row
         start = find_nth_occurrence(row, '/', 5) # index start of building number
         start += 1
-        end = start + 2
 
-        # adds building number to each row
-        if start != 0: # orignal is -1, but compensated due to incremented start
-            bld_num = row[start:end]
-            df.__getitem__('Building').__setitem__(index, bld_num)
+        # Extract the building number including any subsequent alphabetical characters
+        if start != 0:  # original is -1, but compensated due to incremented start
+            match = re.match(r'(\d+[A-Z]*)', row[start:])
+            if match:
+                bld_num = match.group(1)
+                df.at[index, 'Building'] = bld_num
+
     df.to_csv(csv_file, index=False)
+
 
 def metasys_csv():
     csv_file = 'metasys.csv'
@@ -75,5 +79,6 @@ def lutron_csv():
     # Save the updated DataFrame back to a CSV file
     df.to_csv(csv_file, index=False)
 # Tester
+webctrl_csv()
 #metasys_csv()
-lutron_csv()
+#lutron_csv()
