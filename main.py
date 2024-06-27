@@ -46,11 +46,11 @@ const options = {
 
 # Apply stabilization and disable physics after initialization
 stabilization_js = """
-var network = window.network;
-network.on("stabilizationIterationsDone", function () {
-  network.stopSimulation();
-});
-network.stabilize(100);
+    var network = window.network;
+    network.on("stabilizationIterationsDone", function () {
+    network.stopSimulation();
+    });
+    network.stabilize(100);
 """
 
 # Display the network diagram in the HTML file
@@ -116,10 +116,10 @@ with open(output_file_path, 'r') as file:
 
 # Define the header HTML to insert an image on top of the diagram
 header_html = '''
-<header>
-    <img src="images/berklab.png" alt="Berkeley Lab" style="width: 7%; height: auto; display: block; margin-left: 0; margin-right: auto;">
-    <h1> Building Automation Systems Diagram </h1>
-    <h3> By. Richard Azucenas </h3>
+<header style="background-color: #00313C; padding: 10px; text-align: center;">
+    <img src="images/berklab.png" alt="Berkeley Lab" style="width: 7%; height: auto; display: block; margin-left: auto; margin-right: auto;">
+    <h1 style="margin: 10px 0 0 0; color: white;">Building Automation Systems Diagram</h1>
+    <h3 style="margin: 5px 0 10px 0; color: white;">By. Richard Azucenas</h3>
 </header>
 '''
 
