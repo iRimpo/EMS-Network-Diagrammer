@@ -1,9 +1,9 @@
 building_images = {
-    "2": "images/buildings/2.png",
-    "4": "images/buildings/4.png",
-    "5": "images/buildings/5.png",
-    "6": "images/buildings/6.png",
-    "7": "images/buildings/7.png",
+    "02": "images/buildings/2.png",
+    "04": "images/buildings/4.png",
+    "05": "images/buildings/5.png",
+    "06": "images/buildings/6.png",
+    "07": "images/buildings/7.png",
     "10A": "images/buildings/10A.png",
     "14": "images/buildings/14.png",
     "15": "images/buildings/15.png",
@@ -92,8 +92,5 @@ building_images = {
     "91": "images/buildings/91.png"
 }
 
-def add_building_images(net):
-    for building, image_path in building_images.items():
-        if building in net.nodes:
-            net.nodes[building]['image'] = image_path
-            net.nodes[building]['shape'] = 'image'
+def add_building_images(building_number):
+    return building_images.get(str(building_number), "images/buildings/default.png")
