@@ -32,7 +32,7 @@ def webctrl(csv_file_path, output_file_path, net=None):
         
         # Add building node
         image = add_building_images(index)
-        tooltip = f"<img src={image} width='100' height='100'><br><strong>Building:</strong> {index}"
+        tooltip = f"<img src={image} width='60%' height='auto'><br><strong>Building:</strong> {index}"
         net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
@@ -110,7 +110,8 @@ def metasys(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        tooltip = f"<img src='images/location.png' width='100' height='100'><br><strong>Building:</strong> {index}"
+        image = add_building_images(index)
+        tooltip = f"<img src={image} width='60%' height='auto'><br><strong>Building:</strong> {index}"
         net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
@@ -186,7 +187,8 @@ def lutron(csv_file_path, output_file_path, net=None):
             continue  # Skip adding 'Unknown' as a building node
         
         # Add building node
-        tooltip = f"<img src='images/location.png' width='100' height='100'><br><strong>Building:</strong> {index}"
+        image = add_building_images(index)
+        tooltip = f"<img src={image} width='60%' height='auto'><br><strong>Building:</strong> {index}"
         net.add_node(str(index), label=str(index), color='green', image='images/location.png', shape='circularImage', size=40, tooltip=tooltip)
         
         # Get the unique vendors for this building
